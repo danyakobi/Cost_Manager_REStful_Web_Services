@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 
 // include cost controller
-const cost_controller = require('../controllers/cost');
+const costController = require('../controllers/cost');
 
 // routes
-router.get('/', cost_controller.all_costs);
-router.post('/create', cost_controller.cost_create);
-router.get('/:id', cost_controller.cost_details);
-router.put('/update/:id', cost_controller.cost_update);
-router.delete('/delete/:id', cost_controller.cost_delete);
+router.get('/', costController.allCosts);
+router.post('/create', costController.costCreate);
+router.get('/:id', costController.costDetails);
+router.put('/update/:id', costController.costUpdate);
+router.delete('/delete/:id', costController.costDelete);
 
 module.exports = router;

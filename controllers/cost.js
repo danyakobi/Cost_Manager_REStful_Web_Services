@@ -1,19 +1,33 @@
 const Cost = require('../models/cost');
+const db = require('../db/mongoose');
 
 // create a new Cost.
-exports.cost_create = function (req, res) {
+exports.costCreate = function (req, res) {
     // validate request
-    if (!req.body.description || !req.body.sum) {
+    if (!req.body.description || !req.body.sum || !req.body.category) {
         return res.status(400).send({
             success: false,
-            message: "Please enter cost description and sum"
+            message: "Please enter cost description, sum and category"
         });
     }
+    //validate user
+
+        if (!req.body.description) {
+        return res.status(400).send({
+            success: false,
+            message: "you dont have acsess you have to register for service"
+        });
+    }
+
     // constructor
+    // we need to check if user exist in system --- if not he couldnt create cost
     let cost = new Cost(
         {
             description: req.body.description,
-            sum: req.body.sum
+            sum: req.body.sum,
+            category: req.body.category,
+            date: Date.now()
+
         }
     );
 
@@ -33,7 +47,7 @@ exports.cost_create = function (req, res) {
 };
 
 // retrieve and return all costs.
-    exports.all_costs = (req, res) => {
+    exports.allCosts = (req, res) => {
         Cost.find()
             .then(data => {
                 var message = "";
@@ -54,7 +68,7 @@ exports.cost_create = function (req, res) {
     };
 
     // find a single cost with a id.
-    exports.cost_details = (req, res) => {
+    exports.costDetails = (req, res) => {
         Cost.findById(req.params.id)
             .then(data => {
                 if(!data) {
@@ -85,7 +99,7 @@ exports.cost_create = function (req, res) {
 };
 
 // update a cost  by the id.
-exports.cost_update = (req, res) => {
+exports.costUpdate = (req, res) => {
     // validate request
     if(!req.body.description || !req.body.sum) {
         return res.status(400).send({
@@ -124,7 +138,7 @@ exports.cost_update = (req, res) => {
 };
 
 // delete a cost with the specified id.
-exports.cost_delete = (req, res) => {
+exports.costDelete = (req, res) => {
     Cost.findByIdAndRemove(req.params.id)
         .then(data => {
             if (!data) {

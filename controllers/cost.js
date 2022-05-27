@@ -1,5 +1,7 @@
 const Cost = require('../models/cost');
 const db = require('../db/mongoose');
+const User = require('../models/user');
+
 
 // create a new Cost.
 exports.costCreate = function (req, res) {
@@ -11,11 +13,12 @@ exports.costCreate = function (req, res) {
         });
     }
     //validate user
-
-        if (!req.body.description) {
+        const tempUser = User.findOne(req.body.owner)
+        console.log("XXXXXXXXXXXXXXXXXXXXXXXXX");
+        if (tempUser.findOne()) {
         return res.status(400).send({
             success: false,
-            message: "you dont have acsess you have to register for service"
+            message: "you dont have access! you have to register for service"
         });
     }
 
@@ -26,7 +29,8 @@ exports.costCreate = function (req, res) {
             description: req.body.description,
             sum: req.body.sum,
             category: req.body.category,
-            date: Date.now()
+            date: Date.now(),
+            owner: req.body.owner
 
         }
     );

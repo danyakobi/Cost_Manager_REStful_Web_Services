@@ -5,7 +5,8 @@ let costsSchema = new Schema({
     description: {type: String, required: true, max: 100},
     sum: {type: Number, required: true},
     category: {type: String, required: true, max: 100},
-    date: {type: Date, required: true}
+    date: {type: Date, required: true},
+    owner: {type: String, required: true}
 
 });
 

@@ -1,8 +1,11 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const db = require('../db/mongoose');
+const {ObjectID, ObjectId} = require("mongodb");
+const Buyer = require("../models/buyer.js")
 
-let usersSchema = new Schema({
-    id: {type: String, required: true, max: 100},
+let buyersSchema = new Schema({
+    id: {type: String,required :true},
     firstName: {type: String, required: true, max: 100},
     lastName: {type: String, required: true, max: 100},
     birthday: {type: String, required: true, max: 100},
@@ -12,6 +15,8 @@ let usersSchema = new Schema({
 
 });
 
+
+
 // Export the models
-module.exports = mongoose.model('users', usersSchema);
+const buyer = module.exports = mongoose.model('buyers', buyersSchema);
 

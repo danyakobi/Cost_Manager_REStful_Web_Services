@@ -5,7 +5,7 @@ const router = express.Router();
 const costController = require('../controllers/cost');
 
 // routes
-router.get('/', costController.allCosts);
+router.get('/:email', costController.allCostbyBuyer);
 router.post('/create', costController.costCreate);
 router.get('/:id', costController.costDetails);
 router.put('/update/:id', costController.costUpdate);

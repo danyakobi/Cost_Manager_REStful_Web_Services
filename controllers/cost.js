@@ -1,58 +1,56 @@
 const Cost = require('../models/cost');
 const db = require('../db/mongoose');
-const User = require('../models/user');
+const Buyer = require('../models/buyer');
+const {ObjectId} = require("mongodb");
+var mongoClient = require('mongodb').MongoClient;
 
-
-// create a new Cost.
+// create a new Cost ,assign a cost to the owner(user) and add the sum to totalCosts.
 exports.costCreate = function (req, res) {
-    // validate request
+
     if (!req.body.description || !req.body.sum || !req.body.category) {
         return res.status(400).send({
             success: false,
-            message: "Please enter cost description, sum and category"
+            message: "Please enter cost description sum, category "
         });
     }
-    //validate user
-        const tempUser = User.findOne(req.body.owner)
-        console.log("XXXXXXXXXXXXXXXXXXXXXXXXX");
-        if (tempUser.findOne()) {
-        return res.status(400).send({
-            success: false,
-            message: "you dont have access! you have to register for service"
-        });
-    }
-
-    // constructor
-    // we need to check if user exist in system --- if not he couldnt create cost
-    let cost = new Cost(
-        {
-            description: req.body.description,
-            sum: req.body.sum,
-            category: req.body.category,
-            date: Date.now(),
-            owner: req.body.owner
-
-        }
-    );
-
-    cost.save()
-        .then(data => {
-            res.send({
-                success: true,
-                message: 'cost successfully created',
-                data: data
+    Buyer.findOne({email: req.body.owner}, function (err, obj) {
+        if (obj == null) {
+            return res.status(400).send({
+                success: false,
+                message: "Please register to user this service"
             });
-        }).catch(err => {
-        res.status(500).send({
-            success: false,
-            message: err.message || "Some error occurred while creating the cost."
-        });
+        } else {
+            obj.totalCosts = req.body.sum +obj.totalCosts;
+            obj.save();
+            let cost = new Cost(
+                {
+                    description: req.body.description,
+                    sum: req.body.sum,
+                    category: req.body.category,
+                    date: Date.now(),
+                    owner: req.body.owner
+                }
+            );
+            cost.save()
+                .then(data => {
+                    res.send({
+                        success: true,
+                        message: 'cost successfully created',
+                        data: data
+                    });
+                }).catch(err => {
+                res.status(500).send({
+                    success: false,
+                    message: err.message || "Some error occurred while creating the cost."
+                });
+            });
+        }
     });
-};
 
-// retrieve and return all costs.
-    exports.allCosts = (req, res) => {
-        Cost.find()
+}
+// find all cost of specific buyer(email).
+exports.allCostbyBuyer = (req, res) => {
+        Cost.find({owner:req.params.email})
             .then(data => {
                 var message = "";
                 if (data === undefined || data.length == 0) message = "No cost found!";
@@ -71,8 +69,8 @@ exports.costCreate = function (req, res) {
         });
     };
 
-    // find a single cost with a id.
-    exports.costDetails = (req, res) => {
+// find a single cost with a id.
+exports.costDetails = (req, res) => {
         Cost.findById(req.params.id)
             .then(data => {
                 if(!data) {
@@ -169,5 +167,5 @@ exports.costDelete = (req, res) => {
     });
 };
 
-
+//
 

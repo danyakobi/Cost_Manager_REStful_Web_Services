@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
+const db = require('../db/mongoose');
+
 
 let costsSchema = new Schema({
     description: {type: String, required: true, max: 100},
@@ -12,5 +14,6 @@ let costsSchema = new Schema({
 
 // Export the models
 module.exports = mongoose.model('cost', costsSchema);
+
 
 

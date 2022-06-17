@@ -5,7 +5,6 @@ const uri ='mongodb+srv://Admin90:Admin90@cluster0.obn8t.mongodb.net/CostManager
 const connectDB = async () => {
     try {
        let connection= await mongoose.connect(uri, {
-
            /*
             useNewUrlParser: true,
             useUnifiedTopology: true,

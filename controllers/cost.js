@@ -5,10 +5,14 @@ const {ObjectId} = require("mongodb");
 const {get} = require("mongoose");
 const {save} = require("debug");
 var mongoClient = require('mongodb').MongoClient;
+
+//These are the only categories we allow in our costs at this time
+const categoryArray = ['food', 'health', 'housing', 'sport', 'education'];
+
 // create a new Cost ,assign a cost to the owner(user) and add the sum to totalCosts.
 exports.costCreate =function (req, res) {
 
-    if (!req.body.description || !req.body.sum || !req.body.category) {
+    if (!req.body.description || !req.body.sum || !categoryArray.includes(req.body.category.toLowerCase())) {
         return res.status(400).send({
             success: false,
             message: "Please enter cost description sum, category "
